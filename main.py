@@ -17,7 +17,8 @@ state = {
     },
     "game_over": False,
     "winner" : "",
-    "loser": ""
+    "loser": "",
+    "turn": 1
 }
 
 #Functions
@@ -78,17 +79,20 @@ def winner_check():
 for _ in range(2):
     deal_cards("user")
     deal_cards("ai")
-
 winner_check()
 
 while state["game_over"] == False:
   should_continue = input("Do you want another card? (y or n)\n").lower()
   if should_continue == "y":
+    state["turn"] += 1
+    print(f"\nTurn {state['turn']}:")
     deal_cards("user")
     deal_cards("ai")
     winner_check()
   elif should_continue == "n":
     while state["ai"]["score"] < 17:
+      state["turn"] += 1
+      print(f"\nTurn {state['turn']}:")
       deal_cards("ai")
       winner_check()
     else:
@@ -96,9 +100,12 @@ while state["game_over"] == False:
 
 if state["game_over"] == True:
   winner_check()
-  if state["winner"] == "user" or state["loser"] == "ai":
-    print("You have won the game!")
-  elif state["winner"] == "ai" or state["loser"] == "user":
-    print("Sorry, You have lost the game!")
+  if state["user"]["score"] > 21 and state["ai"]["score"] > 21:
+    print("Both players are lost!")
   else:
-    print("It's a draw")
+    if state["winner"] == "user" or state["loser"] == "ai":
+      print("You have won the game!")
+    elif state["winner"] == "ai" or state["loser"] == "user":
+      print("Sorry, You have lost the game!")
+    else:
+      print("It's a draw")
